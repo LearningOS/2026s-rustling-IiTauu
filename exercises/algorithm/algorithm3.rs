@@ -3,10 +3,30 @@
 	This problem requires you to implement a sorting algorithm
 	you can use bubble sorting, insertion sorting, heap sorting, etc.
 */
-// I AM NOT DONE
 
-fn sort<T>(array: &mut [T]){
+fn sort<T: std::cmp::PartialOrd + Clone>(array: &mut [T]){
 	//TODO
+    if array.len() == 0{
+        return;
+    }
+
+    let base = array[0].clone();
+    let mut l = 0;
+    let mut r = array.len()-1;
+    while l<r {
+        while l<r && array[r] >= base{
+            r-=1;
+        }
+        array.swap(l,r);
+        while l<r && array[l] < base{
+            l+=1;
+        }
+        array.swap(l,r)
+    }
+
+    let (left, right) = array.split_at_mut(l);
+    sort(left);
+    sort(&mut right[1..]);
 }
 #[cfg(test)]
 mod tests {
@@ -21,7 +41,7 @@ mod tests {
 	#[test]
     fn test_sort_2() {
         let mut vec = vec![1];
-        sort(&mut vec);
+        sort(&mut vec);;
         assert_eq!(vec, vec![1]);
     }
 	#[test]

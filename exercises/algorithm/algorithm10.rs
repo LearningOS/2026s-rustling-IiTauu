@@ -2,20 +2,22 @@
 	graph
 	This problem requires you to implement a basic graph functio
 */
-// I AM NOT DONE
 
 use std::collections::{HashMap, HashSet};
 use std::fmt;
 #[derive(Debug, Clone)]
 pub struct NodeNotInGraph;
+
 impl fmt::Display for NodeNotInGraph {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(f, "accessing a node that is not in the graph")
     }
 }
+
 pub struct UndirectedGraph {
     adjacency_table: HashMap<String, Vec<(String, i32)>>,
 }
+
 impl Graph for UndirectedGraph {
     fn new() -> UndirectedGraph {
         UndirectedGraph {
@@ -29,7 +31,21 @@ impl Graph for UndirectedGraph {
         &self.adjacency_table
     }
     fn add_edge(&mut self, edge: (&str, &str, i32)) {
-        //TODO
+        let (from, to, weight) = edge;
+
+        if let Some(neighbours) = self.adjacency_table.get_mut(from) {
+            neighbours.push((to.to_string(), weight));
+        } else {
+            self.adjacency_table
+                .insert(from.to_string(), vec![(to.to_string(), weight)]);
+        }
+
+        if let Some(neighbours) = self.adjacency_table.get_mut(to) {
+            neighbours.push((from.to_string(), weight));
+        } else {
+            self.adjacency_table
+                .insert(to.to_string(), vec![(from.to_string(), weight)]);
+        }
     }
 }
 pub trait Graph {
